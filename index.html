@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="sudoku/Sudoku.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+    <style>
+        body { background:#000; color:#666; }
+        .cell { float:left; padding:0px 5px; }
+        .hsep { float:left; height:1px; margin-right:15px; }
+        .vsep { clear:both; margin-bottom:15px; }
+        .clear-fix { float:left; clear:both; }
+    </style>
+</head>
+<body>
+
+</div>
+<h3>Puzzle</h3>
+<div id="puzzle-container">
+
+</div>
+<h3>Solved</h3>
+<div id="solved-container">
+
+</div>
+
+<script>
+
+
+    // for stress testing
+    function run() {
+        var newPuzzle = Sudoku.generate();
+        createSudoku(9, 'puzzle');
+        populatePuzzle('puzzle', newPuzzle);
+
+        var solvedPuzzle = Sudoku.solve(newPuzzle);
+        createSudoku(9, 'solved');
+        populatePuzzle('solved', solvedPuzzle);
+    }
+
+    //setInterval(testRun, 1000);
+
+
+
+    //testSolve(2);
+    //testGenerate();
+    run();
+
+
+
+
+    ///
+    ///
+    ///     TEST METHODS
+    ///
+    ///
+
+
+
+
+    function testSolve(puzzleId) {
+        createSudoku(9, 'puzzle');
+        var puzzle = getPuzzle(puzzleId)
+        populatePuzzle('puzzle', puzzle);
+
+        createSudoku(9, 'solved');
+        var solved = Sudoku.solve(puzzle);
+        populatePuzzle('solved', solved);
+    }
+
+
+
+    function testGenerate() {
+        var genPuzzle = Sudoku.generate(9);
+        createSudoku(9, 'puzzle');
+        populatePuzzle('puzzle', genPuzzle);
+    }
+
+
+
+
+    ///
+    ///
+    ///     UTILS
+    ///
+    ///
+
+
+
+
+    /**
+     * Testing to get a board.
+     * @param id - the board to get
+     */
+    function getPuzzle(id) {
+        /* TEMPLATE
+         var arg = [
+             0, 0, 0,    0, 0, 0,    0, 0, 0,
+             0, 0, 0,    0, 0, 0,    0, 0, 0,
+             0, 0, 0,    0, 0, 0,    0, 0, 0,
+
+             0, 0, 0,    0, 0, 0,    0, 0, 0,
+             0, 0, 0,    0, 0, 0,    0, 0, 0,
+             0, 0, 0,    0, 0, 0,    0, 0, 0,
+
+             0, 0, 0,    0, 0, 0,    0, 0, 0,
+             0, 0, 0,    0, 0, 0,    0, 0, 0,
+             0, 0, 0,    0, 0, 0,    0, 0, 0
+         ];
+         */
+        var puzzle = [];
+
+        switch(id) {
+            case 1:
+                puzzle = [
+                    5, 3, 0,    0, 7, 0,    0, 0, 0,
+                    6, 0, 0,    1, 9, 5,    0, 0, 0,
+                    0, 9, 8,    0, 0, 0,    0, 6, 0,
+
+                    8, 0, 0,    0, 6, 0,    0, 0, 3,
+                    4, 0, 0,    8, 0, 3,    0, 0, 1,
+                    7, 0, 0,    0, 2, 0,    0, 0, 6,
+
+                    0, 6, 0,    0, 0, 0,    2, 8, 0,
+                    0, 0, 0,    4, 1, 9,    0, 0, 5,
+                    0, 0, 0,    0, 8, 0,    0, 7, 9
+                ];
+                break;
+
+            case 2:
+                puzzle = [
+                    0, 0, 2,    1, 0, 3,    0, 0, 0,
+                    8, 0, 0,    0, 4, 0,    0, 2, 0,
+                    7, 0, 4,    6, 8, 2,    0, 3, 1,
+
+                    6, 0, 9,    0, 0, 0,    1, 0, 0,
+                    0, 1, 8,    0, 7, 0,    6, 5, 0,
+                    0, 0, 7,    0, 0, 0,    8, 0, 2,
+
+                    1, 8, 0,    7, 3, 4,    2, 0, 9,
+                    0, 2, 0,    0, 5, 0,    0, 0, 7,
+                    0, 0, 0,    2, 0, 8,    4, 0, 0
+                ];
+                break;
+
+            /** broke */
+            case 3:
+                puzzle = [
+                    0, 8, 0,    9, 1, 0,    0, 0, 2,
+                    0, 0, 0,    0, 4, 3,    3, 1, 6,
+                    6, 0, 7,    0, 0, 0,    5, 9, 4,
+
+                    9,7,0,0,3,1,0,0,0,
+                    0,0,0,0,0,0,7,0,0,
+                    8,0,0,0,0,0,4,0,0,
+
+                    0,0,8,3,0,0,0,4,1,
+                    0,0,3,4,9,5,6,0,0,
+                    9,0,4,0,0,6,0,0,7
+                ]
+                break;
+        }
+
+        return puzzle;
+    }
+
+    function createSudoku(size, id) {
+        var container = $('#' + id + "-container");
+        var cellIndex = 0;
+        // loop rows. every 3 has a v-divider.
+        for(var i = 1; i <= size; i++) {
+
+            // loop columns. every 3 has a h-divider
+            for(var j = 1; j <= size; j++) {
+                var idValue = id + "_" + cellIndex;
+                var htmlValue = '<div id="' + idValue + '" class="cell"></div>';
+                container.append(htmlValue);
+
+                // place the horizontal separator
+                if(j % 3 === 0) {
+                    container.append('<div class="hsep"></div>');
+                }
+
+                cellIndex++;
+            }
+
+            // place the vertical separator
+            if(i % 3 === 0) {
+                container.append('<div class="vsep"></div>');
+            } else {
+                container.append('<div class="clear-fix"></div>');
+            }
+        }
+    }
+
+    function populatePuzzle(id, arr) {
+        var len = arr.length;
+        for(var i = 0; i < len; i++) {
+            var cell = $('#' + id + "_" + i);
+            cell.text(arr[i]);
+        }
+    }
+
+</script>
+</body>
+</html>
