@@ -9,7 +9,8 @@
         //
         //  SOLVE
         //
-        this.solve = function(arr) {
+        this.solve = function(arr, debugFunction) {
+            trace("Starting Solve...");
 
             // early exit if not a valid size
             if(!validateSize(arr.length)) { return arr; }
@@ -28,9 +29,16 @@
                 var iterativeChange = false;
                 for(var i = 0; i < len; i++) {
                     var cell = cells[i];
-                    if(cell.getPossiblesLength() === 1) {
+                    var prevValue = cell.getValue();
+                    if(prevValue === 0 && cell.getPossiblesLength() === 1) {
                         cell.setValue(cell.getPossiblesValue(0));
+
+                        if(debugFunction !== undefined) {
+                            var debugArr = createArrayFromCells(cells);
+                            debugFunction(debugArr);
+                        }
                     }
+                    // TODO: only reduce on value during the first iteration and when the value has changed
                     if(cell.getValue() !== 0) {
                         var result = cell.reduceGroups();
                         if(result) {
@@ -64,7 +72,9 @@
         //  GENERATE
         //
         // TODO: generate is broken
-        this.generate = function() {
+        this.generate = function(debugFunction) {
+            trace("Starting Generate...");
+
             var size = 81; // hard-coded for a 9x9 puzzle
 
             // Create the initial values
@@ -91,6 +101,9 @@
                 cell.setValue(randomPossibleValue);
                 cell.reduceGroups();
 
+                var debugArr = createArrayFromCells(cells);
+                debugFunction(debugArr);
+
                 // we could be solved at this point.
                 generatedArray = createArrayFromCells(cells);
                 var solvedArray = self.solve(generatedArray);
@@ -106,6 +119,9 @@
         };
     };
 
+    var trace = function(message) {
+        console.log(message);
+    };
 
     /////////////////////////////////
     //
@@ -200,7 +216,7 @@
             var index = _possibleValues.indexOf(value);
             if(index !== -1) {
                 if(_possibleValues.length === 1) {
-                    console.log("ERROR: we are attempting to reduce our last possible value.");
+                    //trace("ERROR: CELL " + self.index + " ["+ self.x + "-" + self.y+ "] we are attempting to reduce our last possible value [" + _possibleValues[0] + "].");
                 } else {
                     _possibleValues.splice(index, 1);
                     hasChanged = true;
@@ -400,7 +416,7 @@
         /*
         var divided = sqrRoot % 3;
         if(divided !== 0) {
-            console.log("ERROR: square root of the size needs to be divisible by three. EG. 9x9, 12x12, etc.");
+            trace("ERROR: square root of the size needs to be divisible by three. EG. 9x9, 12x12, etc.");
             isValid = false;
         }
         return isValid;
