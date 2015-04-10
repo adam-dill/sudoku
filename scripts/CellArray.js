@@ -33,7 +33,7 @@
          * @param arr - an Array of Numbers representing the puzzle
          * @returns {Array} - an Array of Cells linked for Sudoku
          */
-        this.fromArray = function(arr) /* Void */ {
+        this.fromArray = function(arr) /* Array */ {
 
             // Early Exit
             if(arr === undefined || arr.length === 0) { return; }
@@ -68,7 +68,6 @@
                     var columnGroup = new Sudoku.Group();
                     _columns.push(columnGroup);
                 }
-                var colIndex = i % divisor;
 
 
 
@@ -112,11 +111,9 @@
         this.toArray = function()/* Array<Number> */ {
             var returnValue = [];
             var len = self.cellsArray.length;
-            if(len > 0) {
-                for(var i = 0; i < len; i++) {
-                    var cell = self.cellsArray[i];
-                    returnValue.push(cell.value);
-                }
+            for(var i = 0; i < len; i++) {
+                var cell = self.cellsArray[i];
+                returnValue.push(cell.value);
             }
             return returnValue;
         };

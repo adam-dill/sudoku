@@ -14,7 +14,6 @@
         //////////////////////////////////////
 
         this.currentResult = Sudoku.Enums.ReduceRequestType.NONE;
-        this.firstPass = false;
 
         /** A copy of the current state of the Puzzle */
         this.cellsArray/* CellArray */;
@@ -43,7 +42,6 @@
          * @return Boolean - FALSE if there are no more moves. TRUE if the move was successful
          */
         this.moveNext = function() /* Boolean */ {
-            self.firstPass = false;
             self.currentPossibleIndex++;
 
             // initial check
